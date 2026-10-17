@@ -1,0 +1,1 @@
+{"name":"Bad Email","email":"not-an-email","phone":"555-0144","intent":"Buy","budget":"300000","area":"Riverside","message":"Should be rejected","source":"curl"}
