@@ -1,0 +1,936 @@
+{
+  "name": "WF1 - Lead Intake and Instant Reply",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "new-lead",
+        "options": {
+          "responseData": "Lead received"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "01e71a8b-6d9a-471f-883d-0c1686f8de16",
+      "name": "Webhook",
+      "webhookId": "5241aee5-0b78-4bc8-b949-38587556835f"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8b786dc9-7ccc-4550-a517-a19cb1a5e779",
+              "name": "name",
+              "value": "={{ $json.body.name.trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "c45afe49-0e4c-4849-a136-b699697643e5",
+              "name": "email",
+              "value": "={{ $json.body.email.trim().toLowerCase() }}",
+              "type": "string"
+            },
+            {
+              "id": "8c532c7f-a7cb-418e-832a-6a8e2821582e",
+              "name": "phone",
+              "value": "={{ $json.body.phone || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "78e60a52-78e2-4f62-ab6c-65c42fcb4337",
+              "name": "intent",
+              "value": "={{ $json.body.intent }}",
+              "type": "string"
+            },
+            {
+              "id": "e62481ca-a41c-4380-ad13-177d60fb3a99",
+              "name": "budget",
+              "value": "={{ $json.body.budget || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "21860027-0428-4356-86bb-c7ae7df680a9",
+              "name": "area",
+              "value": "={{ $json.body.area || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "eb2d5631-0f2d-47be-84aa-b5c0f1991b43",
+              "name": "message",
+              "value": "={{ $json.body.message || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "721e9665-46c8-454c-bf73-b3436cf509ff",
+              "name": "source",
+              "value": "={{ $json.body.source || 'Webhook' }}",
+              "type": "string"
+            },
+            {
+              "id": "25bed589-5ab2-403b-a720-d08a4703399b",
+              "name": "leadId",
+              "value": "={{ 'L-' + $now.toFormat('yyyyMMddHHmmss') }}",
+              "type": "string"
+            },
+            {
+              "id": "bdb005e2-b2e3-481c-aabd-99241b3ec3db",
+              "name": "createdAt",
+              "value": "={{ $now.toFormat('yyyy-MM-dd HH:mm:ss') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "c56143a1-ae59-49ec-8c8f-a082a8575440",
+      "name": "Normalize"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a2d6de6d-4d06-45a0-bfb0-7bb810880d58",
+              "leftValue": "={{ /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test($json.email) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "cf127deb-cda3-4007-814e-9e9288660f61",
+      "name": "Valid email?"
+    },
+    {
+      "parameters": {
+        "chatId": "8996837041",
+        "text": "=Invalid lead rejected: {{ $json.name }} / {{ $json.email }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        672,
+        96
+      ],
+      "id": "c9d8e8fd-26fd-4a9c-8cda-36bd7ccf6162",
+      "name": "Send a text message",
+      "webhookId": "3898a5c9-5773-4ab2-9d73-32e23b478d8b",
+      "credentials": {
+        "telegramApi": {
+          "id": "8fZvLvxLqbFLNDHm",
+          "name": "Demo Telegram"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1CU5oCx5SuW42I-uxCK9qUbpHLPUxSQFfEi-cAzgyoBw",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "287320549",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "LeadID": "={{ $json.leadId }}",
+            "CreatedAt": "={{ $json.createdAt }}",
+            "Name": "={{ $json.name }}",
+            "Email": "={{ $json.email }}",
+            "Phone": "={{ $json.phone }}",
+            "Intent": "={{ $json.intent }}",
+            "Budget": "={{ $json.budget }}",
+            "Area": "={{ $json.area }}",
+            "Message": "={{ $json.message }}",
+            "Source": "={{ $json.source }}",
+            "Status": "New",
+            "InstantReplySent": "No",
+            "FollowUpStage": "0"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "LeadID",
+              "displayName": "LeadID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "CreatedAt",
+              "displayName": "CreatedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Intent",
+              "displayName": "Intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Area",
+              "displayName": "Area",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message",
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Source",
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "InstantReplySent",
+              "displayName": "InstantReplySent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "FollowUpStage",
+              "displayName": "FollowUpStage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "LastContactAt",
+              "displayName": "LastContactAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        672,
+        -96
+      ],
+      "id": "a9f6768c-db5a-4fb5-9dcd-5c8429181853",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZTTvWxGFrUBhAr3D",
+          "name": "Demo Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.Intent }}",
+                    "rightValue": "Buy",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "09130b1c-dcbc-4972-9c70-35f256dbdceb"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Buy"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "f7206222-9b5f-4d30-b83c-d115981f2c3d",
+                    "leftValue": "={{ $json.Intent }}",
+                    "rightValue": "Sell",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Sell"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "838fcd75-32c8-4b5d-8518-3f8130accb85",
+                    "leftValue": "={{ $json.Intent }}",
+                    "rightValue": "Rent",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Rent"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        896,
+        -112
+      ],
+      "id": "a22530c4-d3ec-4f8c-a811-781289261eac",
+      "name": "Pick template by intent"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d5f84eb4-910f-4f7e-84ad-d61ede4e7edb",
+              "name": "subject",
+              "value": "=Thanks for reaching out, {{ $('Normalize').item.json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "7625066a-1a20-449a-b259-57426bb8a861",
+              "name": "=body",
+              "value": "=<p>Hi {{ $('Normalize').item.json.name }},</p>\n<p>Thanks for your interest in buying in {{ $('Normalize').item.json.area }}. I got your details and I will personally review them today.</p>\n<p>To help me find the right homes, what is the most important feature for you?</p>\n<p>Best,<br>Sam Carter<br>Harbor & Pine Realty</p>",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1136,
+        -304
+      ],
+      "id": "2803ff6c-c1ea-4f78-aee9-ea2c5cba646c",
+      "name": "Template Buy"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1d53d81c-95f2-41f9-b23b-edb7a2e43cde",
+              "name": "=subject",
+              "value": "=Thanks for reaching out, {{ $('Normalize').item.json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "7fda6737-2832-4664-b292-fd287d4c263a",
+              "name": "=body",
+              "value": "=<p>Hi {{ $('Normalize').item.json.name }},</p> <p>Thanks for getting in touch about selling your home in {{ $('Normalize').item.json.area }}. I got your details and will review them today.</p> <p>When are you hoping to list?</p> <p>Best,<br>Sam Carter<br>Harbor & Pine Realty</p>",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1136,
+        -96
+      ],
+      "id": "7cb312df-5b97-470f-89c1-da50222d86ee",
+      "name": "Template Sell"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7259737d-d772-4ed9-9929-7ca94e73676e",
+              "name": "=subject",
+              "value": "=Thanks for reaching out, {{ $('Normalize').item.json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "e01f7537-72c5-47d8-8110-8b47fca2ad5a",
+              "name": "=body",
+              "value": "=<p>Hi {{ $('Normalize').item.json.name }},</p>\n<p>Thanks for your interest in renting in {{ $('Normalize').item.json.area }}. I got your details and will check what is available today.</p>\n<p>What is your ideal move-in date?</p>\n<p>Best,<br>Sam Carter<br>Harbor & Pine Realty</p>",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1136,
+        144
+      ],
+      "id": "ea84f140-eebd-43da-8fdc-04ec8d518124",
+      "name": "Template Rent"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Normalize').item.json.email }}",
+        "subject": "={{ $json.subject }}",
+        "message": "={{ $json.body }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1568,
+        -96
+      ],
+      "id": "7181abf3-6123-4574-86ac-2e2cc55ad037",
+      "name": "Send instant reply",
+      "webhookId": "dba752f7-2adb-44d6-8df6-20481ae7f001",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "prEa0zoZc3GJTUWI",
+          "name": "Demo Gmail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1CU5oCx5SuW42I-uxCK9qUbpHLPUxSQFfEi-cAzgyoBw",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "287320549",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "LeadID": "={{ $('Normalize').item.json.leadId }}",
+            "InstantReplySent": "Yes",
+            "LastContactAt": "={{ $now.toFormat('yyyy-MM-dd HH:mm:ss') }}"
+          },
+          "matchingColumns": [
+            "LeadID"
+          ],
+          "schema": [
+            {
+              "id": "LeadID",
+              "displayName": "LeadID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "CreatedAt",
+              "displayName": "CreatedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Intent",
+              "displayName": "Intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Area",
+              "displayName": "Area",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message",
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Source",
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "InstantReplySent",
+              "displayName": "InstantReplySent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "FollowUpStage",
+              "displayName": "FollowUpStage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "LastContactAt",
+              "displayName": "LastContactAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1792,
+        -96
+      ],
+      "id": "9ab36516-28af-4dfb-9cde-508c29445456",
+      "name": "Mark reply as sent",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZTTvWxGFrUBhAr3D",
+          "name": "Demo Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "8996837041",
+        "text": "=   🚨 New lead: {{ $('Normalize').item.json.name }} ({{ $('Normalize').item.json.intent }})\n   💰 Budget: {{ $('Normalize').item.json.budget }}\n   📍 Area: {{ $('Normalize').item.json.area }}\n   📧 Email: {{ $('Normalize').item.json.email }}\n   📞 Phone: {{ $('Normalize').item.json.phone }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2016,
+        -96
+      ],
+      "id": "b5d52d6e-44a9-479e-a7c7-b1e8768f6e8d",
+      "name": "Alert agent",
+      "webhookId": "75574f40-5333-4aec-b119-aa3ab8b33d20",
+      "credentials": {
+        "telegramApi": {
+          "id": "8fZvLvxLqbFLNDHm",
+          "name": "Demo Telegram"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "localhost:5678",
+            "user-agent": "curl/8.14.1",
+            "accept": "*/*",
+            "content-type": "application/json",
+            "content-length": "175"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "name": "Test Buyer",
+            "email": "harbor.pine.demo12+test2@gmail.com",
+            "phone": "555-0111",
+            "intent": "Rent",
+            "budget": "400000",
+            "area": "Riverside",
+            "message": "Test lead",
+            "source": "curl"
+          },
+          "webhookUrl": "http://localhost:5678/webhook-test/new-lead",
+          "executionMode": "test"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize": {
+      "main": [
+        [
+          {
+            "node": "Valid email?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valid email?": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Pick template by intent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pick template by intent": {
+      "main": [
+        [
+          {
+            "node": "Template Buy",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Template Sell",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Template Rent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Template Rent": {
+      "main": [
+        [
+          {
+            "node": "Send instant reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Template Sell": {
+      "main": [
+        [
+          {
+            "node": "Send instant reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Template Buy": {
+      "main": [
+        [
+          {
+            "node": "Send instant reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send instant reply": {
+      "main": [
+        [
+          {
+            "node": "Mark reply as sent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark reply as sent": {
+      "main": [
+        [
+          {
+            "node": "Alert agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "f0786e16-8634-443c-a09c-87f306c2712a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8a263bc9464b6155e0cf299e18e0582c30f15bf242f1ba9c396b28d10f6a0adb"
+  },
+  "nodeGroups": [],
+  "id": "di4aXKk74dE6cRkn",
+  "tags": []
+}
