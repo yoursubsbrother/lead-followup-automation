@@ -1,0 +1,11 @@
+LeadID,CreatedAt,Name,Email,Phone,Intent,Budget,Area,Message,Source,Status,InstantReplySent,FollowUpStage,LastContactAt,Notes
+L-001,2026-10-18 10:00:00,Amira Haddad,harbor.pine.demo12+l001@gmail.com,555-0101,Buy,350000,Riverside,Looking for a 3-bedroom near schools,Webhook,New,Yes,0,,Fresh lead
+L-002,2026-10-17 10:00:00,Jonas Weber,harbor.pine.demo12+l002@gmail.com,555-0102,Sell,0,Maple Heights,Want to list my house this spring,Webhook,New,Yes,0,,Due day 1
+L-003,2026-10-16 10:00:00,Priya Nair,harbor.pine.demo12+l003@gmail.com,555-0103,Rent,1800,Old Town,Need a 2-bedroom from next month,Webhook,New,Yes,0,,Due day 1
+L-004,2026-10-15 10:00:00,Carlos Mendes,harbor.pine.demo12+l004@gmail.com,555-0104,Buy,500000,Lakeside,First-time buyer with pre-approval,Webhook,New,Yes,1,,Due day 3
+L-005,2026-10-14 10:00:00,Lena Fischer,harbor.pine.demo12+l005@gmail.com,555-0105,Sell,0,Pine Hill,Thinking about downsizing,Webhook,New,Yes,1,,Due day 3
+L-006,2026-10-11 10:00:00,Tom Okafor,harbor.pine.demo12+l006@gmail.com,555-0106,Rent,2200,Harbor District,Relocating for work,Webhook,New,Yes,2,,Due day 7
+L-007,2026-10-10 10:00:00,Yuki Tanaka,harbor.pine.demo12+l007@gmail.com,555-0107,Buy,420000,Maple Heights,Want a quiet street with a garden,Webhook,New,Yes,2,,Due day 7
+L-008,2026-10-16 10:00:00,Sara Lindqvist,harbor.pine.demo12+l008@gmail.com,555-0108,Sell,0,Riverside,Agent already called her,Webhook,Replied,Yes,0,,Skip: Replied
+L-009,2026-10-08 10:00:00,Mateo Silva,harbor.pine.demo12+l009@gmail.com,555-0109,Buy,300000,Old Town,Bought through another agent,Webhook,Closed,Yes,3,,Skip: Closed
+L-010,2026-10-18 10:00:00,Hannah Brooks,harbor.pine.demo12+l010@gmail.com,,Rent,1500,Lakeside,No phone number given,Webhook,New,No,0,,Edge case: missing phone
