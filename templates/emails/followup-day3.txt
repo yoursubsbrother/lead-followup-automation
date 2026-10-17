@@ -1,0 +1,5 @@
+Subject: Still looking in {{area}}, {{name}}?
+
+Hi {{name}},
+I wanted to follow up once more. If your plans have changed, no problem at all. If you are still interested, just reply and I will send options.
+{{agent_name}}, {{brokerage}}
