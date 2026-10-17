@@ -1,0 +1,5 @@
+Subject: Quick follow-up, {{name}}
+
+Hi {{name}},
+Just checking that my message reached you. If you are still looking in {{area}}, reply with a good time to talk, or a yes or no is fine.
+{{agent_name}}, {{brokerage}}

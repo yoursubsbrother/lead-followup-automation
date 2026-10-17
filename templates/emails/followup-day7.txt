@@ -1,0 +1,5 @@
+Subject: Closing the loop, {{name}}
+
+Hi {{name}},
+I will assume the timing is not right and stop reaching out. If that changes, you can reply to this email anytime.
+{{agent_name}}, {{brokerage}}
