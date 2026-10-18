@@ -35,12 +35,12 @@
       "parameters": {
         "documentId": {
           "__rl": true,
-          "value": "1CU5oCx5SuW42I-uxCK9qUbpHLPUxSQFfEi-cAzgyoBw",
+          "value": "YOUR_DOCUMENT_ID",
           "mode": "id"
         },
         "sheetName": {
           "__rl": true,
-          "value": "287320549",
+          "value": "YOUR_SHEET_ID",
           "mode": "id"
         },
         "filtersUI": {
@@ -321,12 +321,12 @@
         "operation": "update",
         "documentId": {
           "__rl": true,
-          "value": "1CU5oCx5SuW42I-uxCK9qUbpHLPUxSQFfEi-cAzgyoBw",
+          "value": "YOUR_DOCUMENT_ID",
           "mode": "id"
         },
         "sheetName": {
           "__rl": true,
-          "value": "287320549",
+          "value": "YOUR_SHEET_ID",
           "mode": "id"
         },
         "columns": {
@@ -524,7 +524,7 @@
     },
     {
       "parameters": {
-        "chatId": "8996837041",
+        "chatId": "YOUR_CHAT_ID",
         "text": "=Follow-ups sent today: {{ $json.count }}{{ $json.ids ? ' (' + $json.ids + ')' : '' }}",
         "additionalFields": {}
       },

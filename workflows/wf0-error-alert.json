@@ -14,7 +14,7 @@
     },
     {
       "parameters": {
-        "chatId": "8996837041",
+        "chatId": "YOUR_CHAT_ID",
         "text": "=Workflow failed: {{ $json.workflow.name }} - {{ $json.execution.error.message }}",
         "additionalFields": {
           "appendAttribution": false

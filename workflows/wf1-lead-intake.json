@@ -132,7 +132,7 @@
     },
     {
       "parameters": {
-        "chatId": "8996837041",
+        "chatId": "YOUR_CHAT_ID",
         "text": "=Invalid lead rejected: {{ $json.name }} / {{ $json.email }}",
         "additionalFields": {}
       },
@@ -157,12 +157,12 @@
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "1CU5oCx5SuW42I-uxCK9qUbpHLPUxSQFfEi-cAzgyoBw",
+          "value": "YOUR_DOCUMENT_ID",
           "mode": "id"
         },
         "sheetName": {
           "__rl": true,
-          "value": "287320549",
+          "value": "YOUR_SHEET_ID",
           "mode": "id"
         },
         "columns": {
@@ -548,13 +548,13 @@
         "operation": "update",
         "documentId": {
           "__rl": true,
-          "value": "1CU5oCx5SuW42I-uxCK9qUbpHLPUxSQFfEi-cAzgyoBw",
+          "value": "YOUR_DOCUMENT_ID",
           "mode": "id"
         },
         "sheetName": {
           "__rl": true,
           "mode": "id",
-          "value": 287320549
+          "value": "YOUR_SHEET_ID"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -737,7 +737,7 @@
     },
     {
       "parameters": {
-        "chatId": "8996837041",
+        "chatId": "YOUR_CHAT_ID",
         "text": "=   🚨 New lead: {{ $('Normalize').item.json.name }} ({{ $('Normalize').item.json.intent }})\n   💰 Budget: {{ $('Normalize').item.json.budget }}\n   📍 Area: {{ $('Normalize').item.json.area }}\n   📧 Email: {{ $('Normalize').item.json.email }}\n   📞 Phone: {{ $('Normalize').item.json.phone }}",
         "additionalFields": {}
       },
@@ -773,7 +773,7 @@
           "query": {},
           "body": {
             "name": "Test Buyer",
-            "email": "harbor.pine.demo12+test2@gmail.com",
+            "email": "YOURNAME+test2@gmail.com",
             "phone": "555-0111",
             "intent": "Rent",
             "budget": "400000",
