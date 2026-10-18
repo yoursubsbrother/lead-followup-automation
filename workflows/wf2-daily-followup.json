@@ -701,7 +701,8 @@
     "timeSavedMode": "fixed",
     "timezone": "Africa/Casablanca",
     "callerPolicy": "workflowsFromSameOwner",
-    "availableInMCP": false
+    "availableInMCP": false,
+    "errorWorkflow": "OlM7m5lxizyDKrO2"
   },
   "versionId": "81362a1c-40fe-428e-b648-ca22a85fbade",
   "meta": {

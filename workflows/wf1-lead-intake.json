@@ -553,8 +553,8 @@
         },
         "sheetName": {
           "__rl": true,
-          "value": "287320549",
-          "mode": "id"
+          "mode": "id",
+          "value": 287320549
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -923,9 +923,13 @@
   "active": true,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate"
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "OlM7m5lxizyDKrO2",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
-  "versionId": "f0786e16-8634-443c-a09c-87f306c2712a",
+  "versionId": "7e4d1681-2c1e-4c48-a03d-9bbb09552784",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "8a263bc9464b6155e0cf299e18e0582c30f15bf242f1ba9c396b28d10f6a0adb"
