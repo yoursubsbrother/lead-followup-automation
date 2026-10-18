@@ -132,7 +132,7 @@
     },
     {
       "parameters": {
-        "chatId": "8996837041",
+        "chatId": "YOUR_CHAT_ID",
         "text": "=Invalid lead rejected: {{ $json.name }} / {{ $json.email }}",
         "additionalFields": {}
       },
@@ -162,7 +162,7 @@
         },
         "sheetName": {
           "__rl": true,
-          "value": "287320549",
+          "value": "YOUR_SHEET_ID",
           "mode": "id"
         },
         "columns": {
@@ -554,7 +554,7 @@
         "sheetName": {
           "__rl": true,
           "mode": "id",
-          "value": 287320549
+          "value": YOUR_SHEET_ID
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -737,7 +737,7 @@
     },
     {
       "parameters": {
-        "chatId": "8996837041",
+        "chatId": "YOUR_CHAT_ID",
         "text": "=   🚨 New lead: {{ $('Normalize').item.json.name }} ({{ $('Normalize').item.json.intent }})\n   💰 Budget: {{ $('Normalize').item.json.budget }}\n   📍 Area: {{ $('Normalize').item.json.area }}\n   📧 Email: {{ $('Normalize').item.json.email }}\n   📞 Phone: {{ $('Normalize').item.json.phone }}",
         "additionalFields": {}
       },

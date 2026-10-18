@@ -40,7 +40,7 @@
         },
         "sheetName": {
           "__rl": true,
-          "value": "287320549",
+          "value": "YOUR_SHEET_ID",
           "mode": "id"
         },
         "filtersUI": {
@@ -326,7 +326,7 @@
         },
         "sheetName": {
           "__rl": true,
-          "value": "287320549",
+          "value": "YOUR_SHEET_ID",
           "mode": "id"
         },
         "columns": {
@@ -524,7 +524,7 @@
     },
     {
       "parameters": {
-        "chatId": "8996837041",
+        "chatId": "YOUR_CHAT_ID",
         "text": "=Follow-ups sent today: {{ $json.count }}{{ $json.ids ? ' (' + $json.ids + ')' : '' }}",
         "additionalFields": {}
       },
