@@ -1,0 +1,67 @@
+{
+  "name": "WF0 - Error Alert",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "0d51e0f9-5f66-455d-9ebd-97fb6f703bcd",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "chatId": "8996837041",
+        "text": "=Workflow failed: {{ $json.workflow.name }} - {{ $json.execution.error.message }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "cf1f6d8b-0192-4a6e-807e-88ee935e81ea",
+      "name": "Alert on failure",
+      "webhookId": "debb22e8-6774-4917-b937-c1ccb011c2e5",
+      "credentials": {
+        "telegramApi": {
+          "id": "8fZvLvxLqbFLNDHm",
+          "name": "Demo Telegram"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Alert on failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "ec5ad0d0-d3bb-46cd-92ea-6071c9039e8e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8a263bc9464b6155e0cf299e18e0582c30f15bf242f1ba9c396b28d10f6a0adb"
+  },
+  "nodeGroups": [],
+  "id": "OlM7m5lxizyDKrO2",
+  "tags": []
+}
