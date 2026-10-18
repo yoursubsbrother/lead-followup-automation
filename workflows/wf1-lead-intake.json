@@ -554,7 +554,7 @@
         "sheetName": {
           "__rl": true,
           "mode": "id",
-          "value": YOUR_SHEET_ID
+          "value": "YOUR_SHEET_ID"
         },
         "columns": {
           "mappingMode": "defineBelow",
