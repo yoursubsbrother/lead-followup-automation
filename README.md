@@ -27,8 +27,8 @@ This project automates the lead response process for real estate agents. When a 
 A comprehensive test plan covering all edge cases (valid leads, invalid emails, missing data, duplicate submissions, and error handling) is documented in [docs/test-plan.md](docs/test-plan.md). All tests have been executed and passed.
 
 ## Demo
-- **Live Demo Sheet**: [View-only Google Sheet](https://docs.google.com/spreadsheets/d/YOUR_DOCUMENT_ID/edit?usp=sharing) *(Replace YOUR_DOCUMENT_ID with the actual ID before publishing)*
-- **Video Walkthrough**: [Loom Demo Video](YOUR_LOOM_LINK_HERE) *(To be added in Milestone 9)*
+- **Live Demo Sheet**: [View-only Google Sheet](https://docs.google.com/spreadsheets/d/1CU5oCx5SuW42I-uxCK9qUbpHLPUxSQFfEi-cAzgyoBw/edit?usp=sharing) 
+- **Video Walkthrough**: [Demo Video](docs/videos/lead-followup-automation-demo-video.mp4)
 
 ## Case Study
 A detailed breakdown of the pain point, solution, and estimated impact can be found in [docs/case-study.md](docs/case-study.md).
