@@ -1,0 +1,714 @@
+{
+  "name": "WF2 - Daily Follow-Up",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9294ba3d-0ade-4062-a1f3-8d76e26ac6c9",
+      "name": "Manual Test"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        -176
+      ],
+      "id": "c4f6f9bc-fa60-4f01-8ca2-048712846cab",
+      "name": "Daily at 09:00"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1CU5oCx5SuW42I-uxCK9qUbpHLPUxSQFfEi-cAzgyoBw",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "287320549",
+          "mode": "id"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status",
+              "lookupValue": "New"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        368,
+        -96
+      ],
+      "id": "634bb064-db84-4e88-a7a8-631065529eab",
+      "name": "Read open leads",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZTTvWxGFrUBhAr3D",
+          "name": "Demo Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const now = new Date();\nreturn $input.all().map(item => {\n  const r = item.json;\n  const created = new Date(String(r.CreatedAt).replace(' ', 'T'));\n  const days = Math.floor((now - created) / 86400000);\n  const stage = Number(r.FollowUpStage || 0);\n  let due = 0;\n  if (stage === 0 && days >= 1) due = 1;\n  else if (stage === 1 && days >= 3) due = 2;\n  else if (stage === 2 && days >= 7) due = 3;\n  return { json: { ...r, days, due } };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        592,
+        -96
+      ],
+      "id": "ef07ac56-ce91-44ab-b5df-ba995250f02c",
+      "name": "Find due follow-ups"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3ffbe486-d0a8-43ca-9f1d-262968064ae2",
+              "leftValue": "={{ $json.due > 0 }}",
+              "rightValue": "is true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        816,
+        -96
+      ],
+      "id": "b1bb2eff-938a-4262-b73a-1294492674f4",
+      "name": "Keep due follow-ups"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.due }}",
+                    "rightValue": "={{ 1 }}",
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    },
+                    "id": "fcd9c57d-71c0-46b9-84ee-3518900d7def"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Day 1"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "c1bc1848-f386-4ab9-85b9-e91e1791f0e2",
+                    "leftValue": "={{ $json.due }}",
+                    "rightValue": "={{ 2 }}",
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Day 3"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "e0e30d80-00f2-4e64-bf59-c686eafa3dc7",
+                    "leftValue": "={{ $json.due }}",
+                    "rightValue": "={{ 3 }}",
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Day 7"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1040,
+        -112
+      ],
+      "id": "9dc8a2dd-c487-4a73-b137-85aea5e3b907",
+      "name": "Pick follow-up day"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f4d5725f-c12c-4bdb-9775-b3e3a82efc3c",
+              "name": "=subject",
+              "value": "=Quick follow-up, {{ $('Find due follow-ups').item.json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "34334b6d-6dfa-453d-a18b-c7e62b137aac",
+              "name": "=body",
+              "value": "=Hi {{ $('Find due follow-ups').item.json.Name }},\nJust checking that my message reached you. If you are still looking in {{ $('Find due follow-ups').item.json.Area }}, reply with a good time to talk, or a yes or no is fine.\nSam Carter, Harbor & Pine Realty",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1312,
+        -288
+      ],
+      "id": "ece52be4-0a1c-4c4b-8629-106c38143835",
+      "name": "Template Day 1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d63ebcd1-f489-434c-8238-9a6822c3cd03",
+              "name": "=subject",
+              "value": "=Still looking in {{ $('Find due follow-ups').item.json.Area }}, {{ $('Find due follow-ups').item.json.Name }}?",
+              "type": "string"
+            },
+            {
+              "id": "cb3d0dd9-f5f6-4b26-87d8-581a93d7b5d3",
+              "name": "body",
+              "value": "=Hi {{ $('Find due follow-ups').item.json.Name }}, I wanted to follow up once more. If your plans have changed, no problem at all. If you are still interested, just reply and I will send options. Sam Carter, Harbor & Pine Realty",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1312,
+        -96
+      ],
+      "id": "724d165e-fcf0-43a2-a39c-aa0211f49685",
+      "name": "Template Day 3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5d00caa8-5312-446c-8f81-717767d48b6f",
+              "name": "subject",
+              "value": "=Closing the loop, {{ $('Find due follow-ups').item.json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "ddef7917-e48c-4da3-b416-079a9184d555",
+              "name": "body",
+              "value": "=Hi {{ $('Find due follow-ups').item.json.Name }}, I will assume the timing is not right and stop reaching out. If that changes, you can reply to this email anytime. Sam Carter, Harbor & Pine Realty",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1312,
+        96
+      ],
+      "id": "960bcca3-42d4-4e03-a949-dad3e442b719",
+      "name": "Template Day 7"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Find due follow-ups').item.json.Email }}",
+        "subject": "={{ $json.subject }}",
+        "message": "={{ $json.body }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1728,
+        -96
+      ],
+      "id": "e823b641-4fd4-479e-9f02-6aa0f76ef824",
+      "name": "Send follow-up",
+      "webhookId": "ee9e174c-a0de-4140-9f8c-701bc4885e98",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "prEa0zoZc3GJTUWI",
+          "name": "Demo Gmail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1CU5oCx5SuW42I-uxCK9qUbpHLPUxSQFfEi-cAzgyoBw",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "287320549",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "LeadID": "={{ $('Find due follow-ups').item.json.LeadID }}",
+            "FollowUpStage": "={{ $('Find due follow-ups').item.json.due }}",
+            "LastContactAt": "={{ $now.toFormat('yyyy-MM-dd HH:mm:ss') }}",
+            "Status": "={{ $('Find due follow-ups').item.json.due === 3 ? 'No Response' : 'New' }}"
+          },
+          "matchingColumns": [
+            "LeadID"
+          ],
+          "schema": [
+            {
+              "id": "LeadID",
+              "displayName": "LeadID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "CreatedAt",
+              "displayName": "CreatedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Intent",
+              "displayName": "Intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Area",
+              "displayName": "Area",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message",
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Source",
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "InstantReplySent",
+              "displayName": "InstantReplySent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "FollowUpStage",
+              "displayName": "FollowUpStage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "LastContactAt",
+              "displayName": "LastContactAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1904,
+        -96
+      ],
+      "id": "64ac668e-9019-4f2a-9bf2-de65a56ea3d4",
+      "name": "Update follow-up stage",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZTTvWxGFrUBhAr3D",
+          "name": "Demo Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst ids = items\n  .map(item => item.json.LeadID)\n  .filter(Boolean)\n  .join(', ');\n\nreturn [{\n  json: {\n    count: items.length,\n    ids\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2128,
+        -96
+      ],
+      "id": "bede19a1-8656-4f06-849a-29cd56ca3df5",
+      "name": "Summarize follow-ups"
+    },
+    {
+      "parameters": {
+        "chatId": "8996837041",
+        "text": "=Follow-ups sent today: {{ $json.count }}{{ $json.ids ? ' (' + $json.ids + ')' : '' }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2352,
+        -96
+      ],
+      "id": "9259bf88-5d83-431e-b218-c214062e0e97",
+      "name": "Summary alert",
+      "webhookId": "c6a32717-1d91-431f-aefc-5b84dfb987e0",
+      "credentials": {
+        "telegramApi": {
+          "id": "8fZvLvxLqbFLNDHm",
+          "name": "Demo Telegram"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Daily at 09:00": {
+      "main": [
+        [
+          {
+            "node": "Read open leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Test": {
+      "main": [
+        [
+          {
+            "node": "Read open leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read open leads": {
+      "main": [
+        [
+          {
+            "node": "Find due follow-ups",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find due follow-ups": {
+      "main": [
+        [
+          {
+            "node": "Keep due follow-ups",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keep due follow-ups": {
+      "main": [
+        [
+          {
+            "node": "Pick follow-up day",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pick follow-up day": {
+      "main": [
+        [
+          {
+            "node": "Template Day 1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Template Day 3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Template Day 7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Template Day 1": {
+      "main": [
+        [
+          {
+            "node": "Send follow-up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Template Day 3": {
+      "main": [
+        [
+          {
+            "node": "Send follow-up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Template Day 7": {
+      "main": [
+        [
+          {
+            "node": "Send follow-up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send follow-up": {
+      "main": [
+        [
+          {
+            "node": "Update follow-up stage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update follow-up stage": {
+      "main": [
+        [
+          {
+            "node": "Summarize follow-ups",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarize follow-ups": {
+      "main": [
+        [
+          {
+            "node": "Summary alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "timezone": "Africa/Casablanca",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "81362a1c-40fe-428e-b648-ca22a85fbade",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8a263bc9464b6155e0cf299e18e0582c30f15bf242f1ba9c396b28d10f6a0adb"
+  },
+  "nodeGroups": [],
+  "id": "uMdmTVXwF6IUBYwe",
+  "tags": []
+}
