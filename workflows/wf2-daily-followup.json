@@ -35,7 +35,7 @@
       "parameters": {
         "documentId": {
           "__rl": true,
-          "value": "1CU5oCx5SuW42I-uxCK9qUbpHLPUxSQFfEi-cAzgyoBw",
+          "value": "YOUR_DOCUMENT_ID",
           "mode": "id"
         },
         "sheetName": {
@@ -321,7 +321,7 @@
         "operation": "update",
         "documentId": {
           "__rl": true,
-          "value": "1CU5oCx5SuW42I-uxCK9qUbpHLPUxSQFfEi-cAzgyoBw",
+          "value": "YOUR_DOCUMENT_ID",
           "mode": "id"
         },
         "sheetName": {
